@@ -9,6 +9,18 @@ git remote add origin https://github.com/mikerains/xamarin.git
 git push -u origin master
 ````
 
+# Getting Visual Studio Emulator to run
+##Hyper-V
+Hyper-V Installed
+All the CPU thread options enabled.  I had to disable memory Protection on my Lenovo?
+
+## Configuration
+http://dotnetbyexample.blogspot.hu/2016/02/fix-for-could-not-connect-to-debugger.html
+
+Configure Hyper-V Machine to "Migrate to Different Physical Processor"
+Configur Android Project to not do the "Fast Deployment"
+
+
 
 First of all, I got into these samples from working through Xamarin.com's "Application Fundamentals", and the first sample app is from https://developer.xamarin.com/guides/android/application_fundamentals/services/creating-a-service/bound-services/
 
