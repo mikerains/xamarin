@@ -9,13 +9,25 @@ git remote add origin https://github.com/mikerains/xamarin.git
 git push -u origin master
 ````
 
+# Debugging with Local Android Device
+* https://developer.xamarin.com/guides/android/getting_started/installation/set_up_device_for_development/
+
+
 # Getting Visual Studio Emulator to run
-##Hyper-V
+## Hyper-V
 Hyper-V Installed
 All the CPU thread options enabled.  I had to disable memory Protection on my Lenovo?
 
+
 ## Configuration
-http://dotnetbyexample.blogspot.hu/2016/02/fix-for-could-not-connect-to-debugger.html
+
+### VS Android Emulator
+* https://blogs.msdn.microsoft.com/devops/2014/11/12/introducing-visual-studios-emulator-for-android/
+
+
+### Debugging with VS Android Emulator
+* http://dotnetbyexample.blogspot.hu/2016/02/fix-for-could-not-connect-to-debugger.html
+* https://developer.xamarin.com/guides/android/deployment,_testing,_and_metrics/debug-on-emulator/visual-studio-android-emulator/
 
 Configure Hyper-V Machine to "Migrate to Different Physical Processor"
 Configur Android Project to not do the "Fast Deployment"
