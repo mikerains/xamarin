@@ -25,7 +25,7 @@ git push -u origin master
 
 
 ### Debugging with VS Android Emulator
-* https://msdn.microsoft.com/en-us/library/mt228282.aspx
+* Troubleshooting the Visual Studio Emulator for Android  https://msdn.microsoft.com/en-us/library/mt228282.aspx
 * http://dotnetbyexample.blogspot.hu/2016/02/fix-for-could-not-connect-to-debugger.html
 * https://developer.xamarin.com/guides/android/deployment,_testing,_and_metrics/debug-on-emulator/visual-studio-android-emulator/
 
