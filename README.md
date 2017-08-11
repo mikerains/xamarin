@@ -9,20 +9,19 @@ git remote add origin https://github.com/mikerains/xamarin.git
 git push -u origin master
 ````
 
-# Debugging with Local Android Device
-* https://developer.xamarin.com/guides/android/getting_started/installation/set_up_device_for_development/
 
+# Configuration
+## Install Xamarin into Visual Studio 2017
+* https://developer.xamarin.com/guides/android/getting_started/installation/windows/
 
-# Getting Visual Studio Emulator to run
-## Hyper-V
-Hyper-V Installed
-All the CPU thread options enabled.  I had to disable memory Protection on my Lenovo?
-
-
-## Configuration
-
-### VS Android Emulator
+## Install Visual Studio Android Emulator
 * https://blogs.msdn.microsoft.com/devops/2014/11/12/introducing-visual-studios-emulator-for-android/
+* https://developer.xamarin.com/guides/android/deployment,_testing,_and_metrics/debug-on-emulator/visual-studio-android-emulator/
+
+# Debugging
+
+### Debugging with Local Android Device
+* https://developer.xamarin.com/guides/android/getting_started/installation/set_up_device_for_development/
 
 
 ### Debugging with VS Android Emulator
@@ -31,7 +30,6 @@ All the CPU thread options enabled.  I had to disable memory Protection on my Le
 
 Configure Hyper-V Machine to "Migrate to Different Physical Processor"
 Configur Android Project to not do the "Fast Deployment"
-
 
 
 First of all, I got into these samples from working through Xamarin.com's "Application Fundamentals", and the first sample app is from https://developer.xamarin.com/guides/android/application_fundamentals/services/creating-a-service/bound-services/
