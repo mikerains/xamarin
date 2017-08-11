@@ -21,7 +21,10 @@ git push -u origin master
 # Debugging
 
 ### Debugging with Local Android Device
+* https://developer.xamarin.com/guides/android/deployment,_testing,_and_metrics/debug-on-device/
 * https://developer.xamarin.com/guides/android/getting_started/installation/set_up_device_for_development/
+  * General USB Drivers https://developer.android.com/studio/run/oem-usb.html#Drivers
+  * Kyocera Phone USB Drivers http://www.kyoceramobile.com/support/drivers/
 
 
 ### Debugging with VS Android Emulator
