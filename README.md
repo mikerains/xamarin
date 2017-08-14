@@ -34,6 +34,12 @@ git push -u origin master
 
 Configure Hyper-V Machine to "Migrate to Different Physical Processor"
 Configur Android Project to not do the "Fast Deployment"
+Make sure Studio Project Proeprties - Build - that Optimiz Code is not checked.
+Also in Android Options, I have needed to checkmark Eable developer instrumentsion ( Debugging Tooling, and set ) , set Debugger to .Net/Xamarin, and Linking to "Sdk and User Assemblies"
+
+### App Crashes on phone, no Stack or Exception in VStudio Debugger
+* Command prompt in android-srd\platf0rm-tools> adb logcat AndroidRuntime:E *:S
+
 
 
 First of all, I got into these samples from working through Xamarin.com's "Application Fundamentals", and the first sample app is from https://developer.xamarin.com/guides/android/application_fundamentals/services/creating-a-service/bound-services/
