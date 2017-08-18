@@ -32,10 +32,21 @@ git push -u origin master
 * http://dotnetbyexample.blogspot.hu/2016/02/fix-for-could-not-connect-to-debugger.html
 * https://developer.xamarin.com/guides/android/deployment,_testing,_and_metrics/debug-on-emulator/visual-studio-android-emulator/
 
-Configure Hyper-V Machine to "Migrate to Different Physical Processor"
-Configur Android Project to not do the "Fast Deployment"
-Make sure Studio Project Proeprties - Build - that Optimiz Code is not checked.
-Also in Android Options, I have needed to checkmark Eable developer instrumentsion ( Debugging Tooling, and set ) , set Debugger to .Net/Xamarin, and Linking to "Sdk and User Assemblies"
+* Configure Hyper-V Machine to "Migrate to Different Physical Processor"
+* Configure Android Project to not do the "Fast Deployment"
+* Make sure Studio Project Proeprties - Build - that Optimize Code is not checked.
+* Also in Android Options, I have needed to 
+  * checkmark Enable developer instrumentation ( Debugging Tooling, and set ) , 
+  * set Debugger to .Net/Xamarin, and Linking to "Sdk and User Assemblies"
+  
+#### Calling WebAPii on my Local VStudio  
+* Android Phone needs to trust the Local Certificate
+  * In Android - Settings - Security - Install From SD Card
+    * I exported the certificate in Windows Cert Manager, copied over USB to my phone, and then installed in settings
+  * https://stackoverflow.com/questions/29279486/how-to-resolve-enter-the-password-for-credential-storage-issue
+  * About Certificates: http://info.ssl.com/article.aspx?id=12149
+  * More about certs: https://stackoverflow.com/questions/642284/apache-with-ssl-how-to-convert-cer-to-crt-certificates
+  
 
 ### App Crashes on phone, no Stack or Exception in VStudio Debugger
 * Command prompt in android-srd\platf0rm-tools> adb logcat AndroidRuntime:E *:S
