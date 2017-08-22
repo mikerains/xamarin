@@ -38,8 +38,9 @@ git push -u origin master
 * Also in Android Options, I have needed to 
   * checkmark Enable developer instrumentation ( Debugging Tooling, and set ) , 
   * set Debugger to .Net/Xamarin, and Linking to "Sdk and User Assemblies"
+  * Uncheck "Optimize code"
   
-#### Calling WebAPii on my Local VStudio  
+#### Calling WebApi on my Local VStudio  
 * Android Phone needs to trust the Local Certificate
   * In Android - Settings - Security - Install From SD Card
     * I exported the certificate in Windows Cert Manager, copied over USB to my phone, and then installed in settings
@@ -50,6 +51,55 @@ git push -u origin master
 
 ### App Crashes on phone, no Stack or Exception in VStudio Debugger
 * Command prompt in android-srd\platf0rm-tools> adb logcat AndroidRuntime:E *:S
+
+### App crashes, android doesn't trust the Local Service Fabric machine's Certificate
+System.Net.Http.HttpRequestException: An error occurred while sending the request ---> System.Net.WebException: Error: TrustFailure (The authentication or decryption has failed.) ---> System.IO.IOException: The authentication or decryption has failed. ---> System.IO.IOException: Error while sending TLS Alert (Fatal:InternalError): System.IO.IOException: The authentication or decryption has failed. ---> Mono.Security.Protocol.Tls.TlsException: Invalid certificate received from server. Error code: 0xffffffff800b010f
+  at Mono.Security.Protocol.Tls.RecordProtocol.EndReceiveRecord (System.IAsyncResult asyncResult) [0x00037] in <d2bf9ddce2b945f79db1e7c4354bafea>:0 
+  at Mono.Security.Protocol.Tls.SslClientStream.SafeEndReceiveRecord (System.IAsyncResult ar, System.Boolean ignoreEmpty) [0x00000] in <d2bf9ddce2b945f79db1e7c4354bafea>:0 
+  at Mono.Security.Protocol.Tls.SslClientStream.NegotiateAsyncWorker (System.IAsyncResult result) [0x00071] in <d2bf9ddce2b945f79db1e7c4354bafea>:0 
+   --- End of inner exception stack trace ---
+  at Mono.Security.Protocol.Tls.SslClientStream.EndNegotiateHandshake (System.IAsyncResult result) [0x00032] in <d2bf9ddce2b945f79db1e7c4354bafea>:0 
+  at Mono.Security.Protocol.Tls.SslStreamBase.AsyncHandshakeCallback (System.IAsyncResult asyncResult) [0x0000c] in <d2bf9ddce2b945f79db1e7c4354bafea>:0  ---> System.IO.IOException: Unable to write data to the transport connection: Connection reset by peer. ---> System.Net.Sockets.SocketException: Connection reset by peer
+  at System.Net.Sockets.Socket.EndSend (System.IAsyncResult asyncResult) [0x00012] in <a547bd0d78184f26ab08d022f013c1e1>:0 
+...
+   --- End of inner exception stack trace ---
+  at Mono.Security.Protocol.Tls.SslStreamBase.EndRead (System.IAsyncResult asyncResult) [0x0004b] in <d2bf9ddce2b945f79db1e7c4354bafea>:0 
+  at Mono.Net.Security.Private.LegacySslStream.EndAuthenticateAsClient (System.IAsyncResult asyncResult) [0x0000e] in <a547bd0d78184f26ab08d022f013c1e1>:0 
+  at Mono.Net.Security.Private.LegacySslStream.AuthenticateAsClient (System.String targetHost, System.Security.Cryptography.X509Certificates.X509CertificateCollection clientCertificates, System.Security.Authentication.SslProtocols enabledSslProtocols, System.Boolean checkCertificateRevocation) [0x0000e] in <a547bd0d78184f26ab08d022f013c1e1>:0 
+...
+  at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd (System.Threading.Tasks.Task task) [0x00008] in <3fd174ff54b146228c505f23cf75ce71>:0 
+  at System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1+ConfiguredTaskAwaiter[TResult].GetResult () [0x00000] in <3fd174ff54b146228c505f23cf75ce71>:0 
+  at Hatcx.Services.UserManagement.Client.UserManagementOperations
+  +<ExecuteRequestWithoutResponseBodyAsync>d__10.MoveNext () [0x001b9] in <dc5bf32d73df4163863fcaccf979d0ad>:0 
+--- End of stack trace from previous location where exception was thrown ---
+...
+  at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd (System.Threading.Tasks.Task task) [0x00008] in <3fd174ff54b146228c505f23cf75ce71>:0 
+  at System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1+ConfiguredTaskAwaiter[TResult].GetResult () [0x00000] in <3fd174ff54b146228c505f23cf75ce71>:0 
+  at Hatcx.Services.UserManagement.Client.UserManagementOperationsExtensions+<UpdateUserAsync>d__3.MoveNext () [0x00075] in <dc5bf32d73df4163863fcaccf979d0ad>:0 
+ +<ExecuteRequestWithoutResponseBodyAsync>d__10.MoveNext () [0x001b9] in <dc5bf32d73df4163863fcaccf979d0ad>:0 
+--- End of stack trace from previous location where exception was thrown ---
+...
+<3fd174ff54b146228c505f23cf75ce71>:0 
+  at System.Runtime.CompilerServices.TaskAwaiter.GetResult () [0x00000] in <3fd174ff54b146228c505f23cf75ce71>:0 
+  at Hatcx.Mobile.Cost.Services.DataProvider+<UpdateUserProfileAsync>d__20.MoveNext () [0x00153] in C:\hatcxgit\HATCXCost\src\HatcxCost\Services\DataProvider.cs:263 
+  
+Diagnosis: When .Net is running on a Windows machine, it has access to the certificate store, and knows about local certificates installed there.  MONO does not have access to the store, so we need to handle untrusted certificates in the ServicePointManager callback.
+
+In HatcxCostDroid's LaunchActivity.OnCreate:
+            //ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, certificate, chain, policyErrors) => { return true; });
+		    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, policyErrors) =>
+		    {
+		        return true;
+          if (errors == SslPolicyErrors.None) return true;
+
+          // get the thumbprint of the certificate that is being validated
+          var currentCertificateThumbprint = (certificate as X509Certificate2)?.Thumbprint;
+
+          // determine if any of the allowed thumbprints matches the current thumbprint
+          return !string.IsNullOrWhiteSpace(currentCertificateThumbprint) 
+              && allowedThumbprints.Any(thumbprint => thumbprint.Equals(currentCertificateThumbprint, StringComparison.InvariantCultureIgnoreCase));
+		    };
+
 
 
 
