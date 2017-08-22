@@ -86,20 +86,21 @@ System.Net.Http.HttpRequestException: An error occurred while sending the reques
 Diagnosis: When .Net is running on a Windows machine, it has access to the certificate store, and knows about local certificates installed there.  MONO does not have access to the store, so we need to handle untrusted certificates in the ServicePointManager callback.
 
 In HatcxCostDroid's LaunchActivity.OnCreate:
-            //ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, certificate, chain, policyErrors) => { return true; });
-		    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, policyErrors) =>
-		    {
-		        return true;
-          if (errors == SslPolicyErrors.None) return true;
+````
+//ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, certificate, chain, policyErrors) => { return true; });
+ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, policyErrors) =>
+{
+    string[] allowThumbprints = .....; //get from config somewhere
+    if (errors == SslPolicyErrors.None) return true;
 
-          // get the thumbprint of the certificate that is being validated
-          var currentCertificateThumbprint = (certificate as X509Certificate2)?.Thumbprint;
+    // get the thumbprint of the certificate that is being validated
+    var currentCertificateThumbprint = (certificate as X509Certificate2)?.Thumbprint;
 
-          // determine if any of the allowed thumbprints matches the current thumbprint
-          return !string.IsNullOrWhiteSpace(currentCertificateThumbprint) 
-              && allowedThumbprints.Any(thumbprint => thumbprint.Equals(currentCertificateThumbprint, StringComparison.InvariantCultureIgnoreCase));
-		    };
-
+    // determine if any of the allowed thumbprints matches the current thumbprint
+    return !string.IsNullOrWhiteSpace(currentCertificateThumbprint) 
+        && allowedThumbprints.Any(thumbprint => thumbprint.Equals(currentCertificateThumbprint, StringComparison.InvariantCultureIgnoreCase));
+};
+````
 
 
 
